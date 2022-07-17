@@ -46,9 +46,10 @@ class _dashboardState extends State<dashboard> {
           color: Color(0xb337c8f8),
           padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
           width: double.infinity,
+          height: conHeight,
           child: Column(
-           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
+           mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Card(
                 color: const Color(0xffffffff),
@@ -72,45 +73,37 @@ class _dashboardState extends State<dashboard> {
                           color: Colors.black,
                         ),
                       ),
-                      const Text("Vehicle Model : ",
+                      const SizedBox(height: 5,),
+
+                      const SizedBox(height: 5,),
+                      const Text("Vehicle Number : ",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 16,
+                        fontWeight: FontWeight.w600,
                         color: Colors.black,
                       ),
                       ),
-                      const Text("Vehicle No : ",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                      ),
-                      Container(
-                        padding:const EdgeInsets.only(left: 5),
+                      const SizedBox(height: 5,),
+                      Center(
                         child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget> [
-
-                            Column(
-                              children: const [
-                                Text("Ready to drive",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ],
+                          const Text("Ready to drive",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold
                             ),
-                          Column(
-                              children: [
-                                statusSwitch(),
-                              ],
-                            ),
+                          ),
+                          const SizedBox(width: 15,),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Center(child: statusSwitch()),
+                          ),
                           ],
                         ),
                       )
@@ -221,7 +214,7 @@ class _dashboardState extends State<dashboard> {
                               ),
                             ),
 
-                            SizedBox(width: 10,),
+                            const SizedBox(width: 10,),
                             MaterialButton(
                               color: Colors.blue,
                               minWidth: queryData.size.width*0.4,

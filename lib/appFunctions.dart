@@ -20,6 +20,8 @@ class appFunctions {
 
   Widget inputField({
     label,
+    ctrl,
+    keyType =TextInputType.text,
     obs = false,
   }) {
     return Column(
@@ -38,6 +40,8 @@ class appFunctions {
         ),
         TextField(
           obscureText: obs,
+          keyboardType: keyType,
+          controller: ctrl,
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(

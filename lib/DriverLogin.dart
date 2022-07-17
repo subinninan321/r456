@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:r456/DriverRegCon.dart';
 import 'package:r456/appFunctions.dart';
 import 'package:r456/dashboard.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class DriverLogin extends StatefulWidget {
   const DriverLogin({Key? key}) : super(key: key);
@@ -15,11 +17,36 @@ class _DriverLoginState extends State<DriverLogin> {
   _toggleVisibility() {
     setState((){obs = ! obs;});
   }
+  //for login
+  static Future<User?> loginUsingEmailPassword(
+      {required String email,
+      required String password,
+      required BuildContext context}) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      user = userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        print("usernot found");
+      }
+    }
+    return user;
+  }
+
+  //login
 
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
+    //controllers
+    TextEditingController _emailController = TextEditingController();
+    TextEditingController _passwordController = TextEditingController();
+    //controllers
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -43,11 +70,20 @@ class _DriverLoginState extends State<DriverLogin> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                appFunctions().inputField(label: "Username"),
-                inputFieldPassword(label: "Password"),
+                appFunctions().inputField(label: "Username",ctrl: _emailController,keyType: TextInputType.emailAddress),
+                inputFieldPassword(label: "Password",ctrl: _passwordController),
 
                 MaterialButton(
-                    onPressed: ()=>Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const dashboard())),
+                    onPressed: () async {
+                      User? user = await loginUsingEmailPassword(email: _emailController.text, password: _passwordController.text, context: context);
+                      print(user);
+                      if(user!=null){
+                        Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const dashboard()));
+                  }
+
+                    },
                   shape: RoundedRectangleBorder(
                     side: const BorderSide(
                       color: Colors.blueAccent,
@@ -102,7 +138,7 @@ class _DriverLoginState extends State<DriverLogin> {
   }
 
 
-Widget inputFieldPassword({label}) {
+Widget inputFieldPassword({label,ctrl}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -118,6 +154,7 @@ Widget inputFieldPassword({label}) {
         height: 2,
       ),
       TextField(
+        controller: ctrl,
         obscureText: obs,
         decoration:  InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -146,5 +183,6 @@ Widget inputFieldPassword({label}) {
       )
     ],
   );
+
 }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:r456/RegCon.dart';
 import 'package:r456/appFunctions.dart';
@@ -22,6 +23,12 @@ class _DriverRegCon extends State<DriverRegCon>
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _name = TextEditingController();
+    TextEditingController _phone = TextEditingController();
+    TextEditingController _email = TextEditingController();
+    TextEditingController _pass1 = TextEditingController();
+    TextEditingController _pass2 = TextEditingController();
+
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -57,12 +64,11 @@ class _DriverRegCon extends State<DriverRegCon>
 
                 child: Column(
                   children: <Widget>[
-                    appFunctions().inputField(label: 'Name'),
-                    appFunctions().inputField(label: 'Phone No'),
-                    appFunctions().inputField(label: 'Email id'),
-                    appFunctions().inputField(label: 'Date of Birth'),
-                    inputFieldPassword(label: 'Password'),
-                    inputFieldPassword(label: 'Re Enter Password'),
+                    appFunctions().inputField(label: 'Name',ctrl: _name),
+                    appFunctions().inputField(label: 'Phone No',ctrl: _phone,keyType: TextInputType.phone),
+                    appFunctions().inputField(label: 'Email id',ctrl: _email,keyType: TextInputType.emailAddress),
+                    inputFieldPassword(label: 'Password',ctrl: _pass1),
+                    inputFieldPassword(label: 'Re Enter Password',ctrl: _pass2),
 
                   ],
                 ),
@@ -78,7 +84,15 @@ class _DriverRegCon extends State<DriverRegCon>
                     height: 60,
 
                     onPressed: () {
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => const RegCon()));
+                      FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(email: _email.text, password: _pass1.text)
+                      .then((value){
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const RegCon()));
+                      }).onError((error, stackTrace) {
+                        appFunctions().driverStatus("Successfully Signed Out");
+                      });
+
+
                     },
                     shape: RoundedRectangleBorder(
                       side: const BorderSide(
@@ -112,7 +126,7 @@ class _DriverRegCon extends State<DriverRegCon>
 
   }
 
-  Widget inputFieldPassword({label}) {
+  Widget inputFieldPassword({label,ctrl}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -128,6 +142,7 @@ class _DriverRegCon extends State<DriverRegCon>
           height: 2,
         ),
         TextField(
+          controller: ctrl,
           obscureText: obs,
           decoration:  InputDecoration(
             contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),

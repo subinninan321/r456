@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:r456/DriverLogin.dart';
 import 'package:r456/HistoryPage.dart';
+import 'package:r456/appFunctions.dart';
 import 'package:r456/dashboard.dart';
 
 class NavPanel extends StatelessWidget {
@@ -57,8 +59,11 @@ class NavPanel extends StatelessWidget {
               leading: const Icon(Icons.logout_sharp),
               title: const Text('Logout'),
               onTap: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, "login", (Route<dynamic> route) => false);
+                FirebaseAuth.instance.signOut().then((value){
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, "login", (Route<dynamic> route) => false);
+                  appFunctions().driverStatus("Successfully Signed Out");
+                });
               }),
         ],
       ),
