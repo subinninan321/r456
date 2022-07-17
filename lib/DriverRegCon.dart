@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:r456/RegCon.dart';
 import 'package:r456/appFunctions.dart';
 
+import 'DriverLogin.dart';
+
 class DriverRegCon extends StatefulWidget
 {
   const DriverRegCon({Key? key}) : super(key: key);
@@ -27,7 +29,7 @@ class _DriverRegCon extends State<DriverRegCon>
       appBar: AppBar(
         leading: IconButton(
           onPressed: (){
-           // Navigator.pop(context);
+           Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_ios_new),
           iconSize: 24,

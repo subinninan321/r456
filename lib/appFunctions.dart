@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class appFunctions {
   void main() {
@@ -11,6 +12,10 @@ class appFunctions {
     } else {
       return 30;
     }
+  }
+  void driverStatus(String status)
+  {
+    Fluttertoast.showToast(msg: status,fontSize: 16);
   }
 
   Widget inputField({
