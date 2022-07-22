@@ -5,6 +5,8 @@ import 'package:r456/HistoryPage.dart';
 import 'package:r456/appFunctions.dart';
 import 'package:r456/dashboard.dart';
 
+import 'editProfile.dart';
+
 class NavPanel extends StatelessWidget {
   const NavPanel({Key? key}) : super(key: key);
   @override
@@ -19,7 +21,7 @@ class NavPanel extends StatelessWidget {
               currentAccountPicture: CircleAvatar(
                 child: ClipOval(
                   child: Image.asset(
-                      'img1.jpg',
+                      'assets/img1.jpg',
                     width: 90,
                     height: 90,
                     fit: BoxFit.fill,
@@ -37,13 +39,15 @@ class NavPanel extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.edit),
-            title: const Text('Edit'),
-            onTap: () => print('edt'),
+            title: const Text('Edit Profile'),
+            onTap: () =>Navigator.push(context,MaterialPageRoute(builder: (context) => const editProfile())) ,
           ),
           ListTile(
             leading: const Icon(Icons.history_sharp),
             title: const Text('History'),
-            onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => const HistoryPage())),
+            onTap: () => WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              Navigator.push(context,MaterialPageRoute(builder: (context) => const HistoryPage()));
+            }),
           ),
           ListTile(
             leading: const Icon(Icons.star_half_sharp),

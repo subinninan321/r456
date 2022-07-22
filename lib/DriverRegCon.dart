@@ -19,15 +19,15 @@ class _DriverRegCon extends State<DriverRegCon>
   void _toggleVisibility() {
     setState((){obs = ! obs;});
   }
-
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _phone = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _pass1 = TextEditingController();
+  final TextEditingController _pass2 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _name = TextEditingController();
-    TextEditingController _phone = TextEditingController();
-    TextEditingController _email = TextEditingController();
-    TextEditingController _pass1 = TextEditingController();
-    TextEditingController _pass2 = TextEditingController();
+
 
 
     return Scaffold(

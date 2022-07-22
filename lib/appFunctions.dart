@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class appFunctions {
+
   void main() {
     print(calculateFare(4));
   }
@@ -18,11 +19,15 @@ class appFunctions {
     Fluttertoast.showToast(msg: status,fontSize: 16);
   }
 
+
+
+  //for input fields
+
   Widget inputField({
     label,
     ctrl,
     keyType =TextInputType.text,
-    obs = false,
+    obst = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,18 +44,15 @@ class appFunctions {
           height: 2,
         ),
         TextField(
-          obscureText: obs,
+          obscureText: obst,
           keyboardType: keyType,
           controller: ctrl,
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.black54,
-              ),
-            ),
+          decoration:InputDecoration(
+            contentPadding:const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+
             border: OutlineInputBorder(
-              borderSide: BorderSide(
+              borderRadius: BorderRadius.circular(10),
+              borderSide:const BorderSide(
                 color: Colors.black54,
               ),
             ),

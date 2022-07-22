@@ -35,17 +35,17 @@ class _DriverLoginState extends State<DriverLogin> {
     }
     return user;
   }
-
+  //controllers
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  //controllers
   //login
 
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
-    //controllers
-    TextEditingController _emailController = TextEditingController();
-    TextEditingController _passwordController = TextEditingController();
-    //controllers
+
 
     return Scaffold(
       appBar: AppBar(

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:r456/appFunctions.dart';
 
@@ -67,6 +66,7 @@ class _RegConState extends State<RegCon> {
                             ),
                           ),
                         ),
+
                         const SizedBox(
                           height: 8,
                         ),

@@ -256,6 +256,8 @@ class _dashboardState extends State<dashboard> {
       ),
     );
   }
+
+
   Widget statusSwitch()=>Transform.scale(
     scale: 1.5,
     child:Switch.adaptive(
