@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:r456/DriverRegCon.dart';
 import 'package:r456/HistoryPage.dart';
 import 'package:r456/NavPanel.dart';
 import 'package:r456/appFunctions.dart';
+import 'package:r456/maps/Googlemaps.dart';
+
+import 'databaseoperations.dart';
 
 class dashboard extends StatefulWidget {
   const dashboard({Key? key}) : super(key: key);
@@ -13,13 +17,6 @@ class dashboard extends StatefulWidget {
 
 class _dashboardState extends State<dashboard> {
   bool value = false;
-  @override
-  // void initState(){
-  //   print('inti');
-  //   super.initState();
-  // }
-  @override
-
   final appBar = AppBar(
 
     title: const Text("Dashboard",
@@ -29,6 +26,9 @@ class _dashboardState extends State<dashboard> {
         color: Colors.black,
       ),),
   );
+
+
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
@@ -37,13 +37,36 @@ class _dashboardState extends State<dashboard> {
     final barHeight =appBar.preferredSize.height;
     final stbarHeight=queryData.padding.top;
     final conHeight=(scrnHeight-barHeight-stbarHeight);
+    int flag = 0;
+
+
+    Widget statusSwitch()=>Transform.scale(
+      scale: 1.5,
+      child:Switch.adaptive(
+        value: value,
+        activeColor: Colors.blueAccent,
+        activeTrackColor: Colors.greenAccent,
+        inactiveThumbColor: Colors.red,
+        inactiveTrackColor: Colors.black,
+        onChanged:(value) =>setState((){
+          this.value=value;
+          if(value){
+            flag=1;
+          }
+          else{
+            flag=0;
+          }
+        }),
+      ),
+    );
+
     return Scaffold (
-      resizeToAvoidBottomInset: true,
-      drawer: NavPanel(),
+      resizeToAvoidBottomInset: false,
+      drawer: const NavPanel(),
       appBar: appBar,
       body: SafeArea(
         child: Container(
-          color: Color(0xb337c8f8),
+          color: const Color(0xb337c8f8),
           padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
           width: double.infinity,
           height: conHeight,
@@ -65,7 +88,7 @@ class _dashboardState extends State<dashboard> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text("Welcome,",
+                      const Text("Welcome{Driver().passData()}",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 22,
@@ -124,6 +147,8 @@ class _dashboardState extends State<dashboard> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: const [
+
+
                       Text("Map",
                         textAlign: TextAlign.start,
                         style: TextStyle(
@@ -153,6 +178,7 @@ class _dashboardState extends State<dashboard> {
                   width: double.infinity,
                   height: conHeight*0.25,
                   padding: const EdgeInsets.all(10),
+
                   child:Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -195,7 +221,7 @@ class _dashboardState extends State<dashboard> {
                               height: 40,
                               onPressed: () {
                                 print("buuto");
-                                Navigator.push(context,MaterialPageRoute(builder: (context) => const DriverRegCon()));
+                                Navigator.push(context,MaterialPageRoute(builder: (context) => const MapsExtension()));
                               },
                               color: Colors.blue,
                               shape: RoundedRectangleBorder(
@@ -257,16 +283,4 @@ class _dashboardState extends State<dashboard> {
     );
   }
 
-
-  Widget statusSwitch()=>Transform.scale(
-    scale: 1.5,
-    child:Switch.adaptive(
-          value: value,
-          activeColor: Colors.blueAccent,
-          activeTrackColor: Colors.greenAccent,
-          inactiveThumbColor: Colors.red,
-          inactiveTrackColor: Colors.black,
-          onChanged:(value) =>setState(()=>this.value=value),
-      ),
-  );
 }

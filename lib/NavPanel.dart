@@ -1,23 +1,35 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:r456/DriverLogin.dart';
 import 'package:r456/HistoryPage.dart';
+import 'package:r456/additionalfiles/CheckLoginForUser.dart';
 import 'package:r456/appFunctions.dart';
 import 'package:r456/dashboard.dart';
+import 'package:r456/databaseoperations.dart';
 
 import 'editProfile.dart';
 
+
 class NavPanel extends StatelessWidget {
   const NavPanel({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    userEmailID=FirebaseAuth.instance.currentUser!.email.toString();
+    //const DatabaseOperations().getData();
     return Drawer(
-      child: ListView(
+
+    child: ListView(
+
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-              accountName: Text("qwert"),
-              accountEmail: Text("adfd"),
+              accountName: Text("test"),
+              accountEmail: Text(userEmailID),
               currentAccountPicture: CircleAvatar(
                 child: ClipOval(
                   child: Image.asset(
@@ -63,11 +75,8 @@ class NavPanel extends StatelessWidget {
               leading: const Icon(Icons.logout_sharp),
               title: const Text('Logout'),
               onTap: () {
-                FirebaseAuth.instance.signOut().then((value){
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, "login", (Route<dynamic> route) => false);
-                  appFunctions().driverStatus("Successfully Signed Out");
-                });
+                context.read<Authentication>().signOut();
+                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const CheckUserLogin()));
               }),
         ],
       ),

@@ -26,6 +26,7 @@ class appFunctions {
   Widget inputField({
     label,
     ctrl,
+    hint="",
     keyType =TextInputType.text,
     obst = false,
   }) {
@@ -48,6 +49,7 @@ class appFunctions {
           keyboardType: keyType,
           controller: ctrl,
           decoration:InputDecoration(
+            hintText: hint,
             contentPadding:const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
 
             border: OutlineInputBorder(
@@ -64,4 +66,6 @@ class appFunctions {
       ],
     );
   }
+
+
 }

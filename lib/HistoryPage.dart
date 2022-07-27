@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'RegCon.dart';
 import 'appFunctions.dart';
+import 'databaseoperations.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -19,6 +21,22 @@ class _HistoryPageState extends State<HistoryPage> {
     final scrnHeight =MediaQuery.of(context).size.height;
     final stbarHeight=MediaQuery.of(context).padding.top;
     final conHeight=(scrnHeight-stbarHeight);
+
+
+    Stream<List<Driver>> readDrivers()=> FirebaseFirestore
+        .instance
+        .collection('driverdetails')
+        .snapshots().map((snapshot) => snapshot.docs.map((doc)=>Driver.fromJson(doc.data())).toList());
+
+    Widget buildDriver(Driver driver)=>ListTile(
+      leading: const CircleAvatar(child: Icon(
+        Icons.ice_skating_outlined,
+      ),),
+
+      title: Text(driver.name),
+      subtitle: Text(driver.phone!.toString()),
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -39,8 +57,32 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ),
       ),
+
+
+
       body: SafeArea(
-        child: Container(
+        child: StreamBuilder<List<Driver>>(
+
+          stream: readDrivers(),
+          builder: (context,snapshot){
+
+            if(snapshot.hasError){
+              return const Text("something went wrong");
+            }else if(snapshot.hasData){
+              final driveHistory = snapshot.data!;
+
+              return ListView(
+                children: driveHistory.map(buildDriver).toList(),
+
+              );
+            } else {
+              return const SizedBox(height: 5,);
+            }
+          }
+
+        ),
+
+        /*Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           width: double.infinity,
           // constraints: const BoxConstraints.expand(),
@@ -130,8 +172,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                 ),
                               ],
                             ),
-                            Padding(padding: EdgeInsets.only(left: 5,top: 8),
-                              child: const Divider(
+                            const Padding(padding: EdgeInsets.only(left: 5,top: 8),
+                              child: Divider(
                                 thickness: 2,
                               ),
                             ),
@@ -172,9 +214,10 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ],
           ),
-        ),
+        ),*/
       ),
     );
+
   }
   Widget getHistory(){
     return IndexedStack(

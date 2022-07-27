@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:r456/RegCon.dart';
 import 'package:r456/appFunctions.dart';
+import 'package:r456/databaseoperations.dart';
 
 import 'DriverLogin.dart';
+import 'dashboard.dart';
 
 class DriverRegCon extends StatefulWidget
 {
@@ -16,9 +20,11 @@ class DriverRegCon extends StatefulWidget
 class _DriverRegCon extends State<DriverRegCon>
 {
   bool obs=true;
+  bool passMatch=false;
   void _toggleVisibility() {
     setState((){obs = ! obs;});
   }
+  final formKey = GlobalKey<FormState>();
   final TextEditingController _name = TextEditingController();
   final TextEditingController _phone = TextEditingController();
   final TextEditingController _email = TextEditingController();
@@ -60,15 +66,17 @@ class _DriverRegCon extends State<DriverRegCon>
               Container(
                 height: 40,
               ),
-              Expanded(child: SingleChildScrollView(
-
-                child: Column(
+              Expanded(child: Form(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                key: formKey,
+                child: ListView(
                   children: <Widget>[
                     appFunctions().inputField(label: 'Name',ctrl: _name),
                     appFunctions().inputField(label: 'Phone No',ctrl: _phone,keyType: TextInputType.phone),
                     appFunctions().inputField(label: 'Email id',ctrl: _email,keyType: TextInputType.emailAddress),
                     inputFieldPassword(label: 'Password',ctrl: _pass1),
-                    inputFieldPassword(label: 'Re Enter Password',ctrl: _pass2),
+
+                    inputFieldPassword(label: 'Re Enter Password',ctrl: _pass2,reenter: true),
 
                   ],
                 ),
@@ -84,14 +92,18 @@ class _DriverRegCon extends State<DriverRegCon>
                     height: 60,
 
                     onPressed: () {
-                      FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(email: _email.text, password: _pass1.text)
-                      .then((value){
-                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const RegCon()));
-                      }).onError((error, stackTrace) {
-                        appFunctions().driverStatus("Successfully Signed Out");
-                      });
+                      final isValidForm = formKey.currentState!.validate();
+                      if(passMatch && isValidForm){
 
+                        context.read<Authentication>().signUp(
+                            email: _email.text.trim(),
+                            password: _pass1.text.trim(),
+                            name: _name.text.trim(),
+                            phone: _phone.text.trim());
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const dashboard()));
+                      } else {
+                        appFunctions().driverStatus("Check your password");
+                      }
 
                     },
                     shape: RoundedRectangleBorder(
@@ -101,6 +113,7 @@ class _DriverRegCon extends State<DriverRegCon>
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: const Text(
+
                       "Sign Up",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -126,7 +139,7 @@ class _DriverRegCon extends State<DriverRegCon>
 
   }
 
-  Widget inputFieldPassword({label,ctrl}) {
+  Widget inputFieldPassword({label,ctrl,reenter = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -141,19 +154,22 @@ class _DriverRegCon extends State<DriverRegCon>
         const SizedBox(
           height: 2,
         ),
-        TextField(
+        TextFormField(
           controller: ctrl,
           obscureText: obs,
           decoration:  InputDecoration(
+            hintText: "Password",
             contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.black54,
+            enabledBorder:OutlineInputBorder(
+              borderRadius:BorderRadius.circular(10) ,
+              borderSide:const  BorderSide(
+                color:Colors.black54,
               ),
             ),
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.black54,
+            border: OutlineInputBorder(
+              borderRadius:BorderRadius.circular(10) ,
+              borderSide:const  BorderSide(
+                color:Colors.black54,
               ),
             ),
             suffixIcon:GestureDetector(
@@ -164,6 +180,20 @@ class _DriverRegCon extends State<DriverRegCon>
 
             ),
           ),
+          validator: (value){
+            if(reenter && _pass1.text.trim()!= value){
+              passMatch=false;
+              return "Password doesn't match";
+            }else if (value != null && value.length < 8 && value.isNotEmpty) {
+              return "Minimum 8 characters required";
+            }else if (reenter && _pass1.text.trim()== value) {
+              passMatch=true;
+              return null;
+            } else {
+              return null;
+            }
+
+          },
         ),
 
         const SizedBox(
@@ -171,5 +201,6 @@ class _DriverRegCon extends State<DriverRegCon>
         )
       ],
     );
+
   }
 }
