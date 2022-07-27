@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:r456/DriverRegCon.dart';
 import 'package:r456/HistoryPage.dart';
 import 'package:r456/NavPanel.dart';
@@ -18,15 +21,19 @@ class dashboard extends StatefulWidget {
 class _dashboardState extends State<dashboard> {
   bool value = false;
   final appBar = AppBar(
-
     title: const Text("Dashboard",
       style: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: Colors.white,
       ),),
-  );
 
+  );
+  final Completer<GoogleMapController> _controller = Completer();
+  late GoogleMapController newMap;
+
+  static const LatLng source = LatLng(9.6723510, 76.3897231);
+  static const LatLng destination = LatLng(9.6699072, 76.3883354);
 
 
   @override
@@ -66,7 +73,7 @@ class _dashboardState extends State<dashboard> {
       appBar: appBar,
       body: SafeArea(
         child: Container(
-          color: const Color(0xb337c8f8),
+          color: const Color(0xfff0f2fd),
           padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
           width: double.infinity,
           height: conHeight,
@@ -75,9 +82,9 @@ class _dashboardState extends State<dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Card(
-                color: const Color(0xffffffff),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                color:const Color(0xffa1a19f),
+                shape:const  RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(topLeft:Radius.circular(20),topRight: Radius.circular(20)),
                 ),
                 child: Container(
                   padding: const EdgeInsets.all(10),
@@ -138,41 +145,51 @@ class _dashboardState extends State<dashboard> {
               Card(
                 color: const Color(0xffffffff),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(50),
                 ),
                 child: Container(
                   width: double.infinity,
                   height: conHeight*0.47,
-                  child:Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
 
+                  child:GoogleMap(
+                    mapType: MapType.normal,
+                    myLocationButtonEnabled: true,
+                    myLocationEnabled: true,
+                    zoomControlsEnabled: true,
+                    zoomGesturesEnabled: true,
+                    scrollGesturesEnabled: true,
 
-                      Text("Map",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                    initialCameraPosition: const CameraPosition(target: source, zoom: 16),
+
+                    onMapCreated: (GoogleMapController controller){
+                      _controller.complete(controller);
+                      newMap=controller;
+                    },
+                    markers: {
+                      const Marker(
+                        markerId: MarkerId("source"),
+                        position: source,
                       ),
-                      Text(": ",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
+                      const Marker(
+                        markerId: MarkerId("destination"),
+                        position: destination,
                       ),
-                      )
-                    ],
 
+                      // Marker(
+                      //   markerId: const MarkerId("current location"),
+                      //   position: LatLng(
+                      //       currentLocation!.latitude!, currentLocation!.longitude!),
+                      // ),
+                    },
                   ),
+
+
                  ),
               ),
               Card(// for ride request
-                color: const Color(0xffffffff),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                color: const Color(0xffa1a19f),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                 ),
                 child: Container(
                   width: double.infinity,
@@ -220,7 +237,6 @@ class _dashboardState extends State<dashboard> {
                               minWidth: queryData.size.width*0.4,
                               height: 40,
                               onPressed: () {
-                                print("buuto");
                                 Navigator.push(context,MaterialPageRoute(builder: (context) => const MapsExtension()));
                               },
                               color: Colors.blue,
@@ -282,5 +298,4 @@ class _dashboardState extends State<dashboard> {
       ),
     );
   }
-
 }

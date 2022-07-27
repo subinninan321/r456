@@ -72,7 +72,9 @@ class _MyAppState extends State<MyApp> {
         title: 'L-Taxi Driver App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-
+          appBarTheme: const AppBarTheme(
+            color: Color(0xff1c1c1a),
+          ),
           primarySwatch: Colors.blue,
         ),
         home: const CheckUserLogin(),
