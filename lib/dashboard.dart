@@ -35,7 +35,7 @@ class _dashboardState extends State<dashboard> {
   //firebase
 
   getCurrentUserData() async{
-    var doc = FirebaseFirestore.instance.collection('driverdetails').doc(userEmailID).get().then((value) {
+    FirebaseFirestore.instance.collection('driverdetails').doc(userEmailID).get().then((value) {
 
     currentUserName=value.get('name').toString();
     });

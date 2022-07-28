@@ -17,9 +17,18 @@ import 'editProfile.dart';
 class NavPanel extends StatelessWidget {
   const NavPanel({Key? key}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
     userEmailID=FirebaseAuth.instance.currentUser!.email.toString();
+    String currentUserName="";
+    getCurrentUserData() async{
+      FirebaseFirestore.instance.collection('driverdetails').doc(userEmailID).get().then((value) {
+
+        currentUserName=value.get('name').toString();
+      });
+    }
     //const DatabaseOperations().getData();
     return Drawer(
 

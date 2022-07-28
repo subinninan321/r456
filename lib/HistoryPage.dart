@@ -46,14 +46,14 @@ class _HistoryPageState extends State<HistoryPage> {
           },
           icon: const Icon(Icons.arrow_back_ios_new),
           iconSize: 24,
-          color: Colors.black,
+          color: Colors.white,
         ),
         title: const Text(
           "Recent Rides",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),

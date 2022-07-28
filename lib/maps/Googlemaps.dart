@@ -130,7 +130,7 @@ class _MapsExtensionState extends State<MapsExtension> {
       style: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: Colors.white,
       ),
     ),
   );

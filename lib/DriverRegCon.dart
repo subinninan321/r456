@@ -46,13 +46,13 @@ class _DriverRegCon extends State<DriverRegCon>
           },
           icon: const Icon(Icons.arrow_back_ios_new),
           iconSize: 24,
-          color: Colors.black,
+          color: Colors.white,
         ),
         title: const Text("Register As Driver",
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Colors.black,
+          color: Colors.white,
         ),),
       ),
       body: SafeArea(

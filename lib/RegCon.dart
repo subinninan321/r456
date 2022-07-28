@@ -56,7 +56,7 @@ class _RegConState extends State<RegCon> {
           },
           icon: const Icon(Icons.arrow_back_ios_new),
           iconSize: 24,
-          color: Colors.black,
+          color: Colors.white,
         ),
         title: const Text(
           "Continue Your Registration",

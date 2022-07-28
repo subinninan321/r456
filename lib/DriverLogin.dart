@@ -38,7 +38,7 @@ class _DriverLoginState extends State<DriverLogin> {
       style: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: Colors.white,
       ),
     ),
   );

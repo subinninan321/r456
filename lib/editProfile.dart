@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:r456/databaseoperations.dart';
-import 'dart:io';
-import 'additionalfiles/popupbox.dart';
-import 'RegCon.dart';
 import 'appFunctions.dart';
 import 'dashboard.dart';
 
@@ -81,6 +78,100 @@ class _editProfileState extends State<editProfile> {
     String driverEmail='';
     String driverPhone='';
 
+
+    TextEditingController _nameOnLicence = TextEditingController();
+    TextEditingController _licenceNumber = TextEditingController();
+    TextEditingController _vehicleNumber = TextEditingController();
+    TextEditingController _state = TextEditingController();
+    TextEditingController _district = TextEditingController();
+    TextEditingController _locality = TextEditingController();
+    TextEditingController _vehicleModel = TextEditingController();
+    TextEditingController _v = TextEditingController();
+
+
+    //textfield
+
+
+    Widget editableField({
+      label,
+      ctrl,
+      hint="",
+      keyType =TextInputType.text,
+      obst = false,
+      editing=false,
+    }) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(
+            height: 2,
+          ),
+          TextFormField(
+            readOnly: editing,
+            focusNode: FocusNode(),
+            controller: ctrl,
+            obscureText: obst,
+            decoration:  InputDecoration(
+              hintText: hint,
+              contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              enabledBorder:OutlineInputBorder(
+                borderRadius:BorderRadius.circular(10) ,
+                borderSide:const  BorderSide(
+                  color:Colors.black54,
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius:BorderRadius.circular(10) ,
+                borderSide:const  BorderSide(
+                  color:Colors.black54,
+                ),
+              ),
+              suffixIcon:GestureDetector(
+                child: const Icon(
+                  Icons.edit,
+                ),
+                onTap: ()=>{
+                  setState((){
+                    editing=!editing;
+                  }),
+                },
+              ),
+            ),
+            // validator: (value){
+            //   if(reenter && _pass1.text.trim()!= value){
+            //     passMatch=false;
+            //     return "Password doesn't match";
+            //   }else if (value != null && value.length < 8 && value.isNotEmpty) {
+            //     return "Minimum 8 characters required";
+            //   }else if (reenter && _pass1.text.trim()== value) {
+            //     passMatch=true;
+            //     return null;
+            //   } else {
+            //     return null;
+            //   }
+            //
+            // },
+          ),
+
+          const SizedBox(
+            height: 6,
+          )
+        ],
+      );
+    }
+
+
+    //textfield
+
+
     Widget showProfile(){
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
@@ -140,9 +231,8 @@ class _editProfileState extends State<editProfile> {
                           const SizedBox(
                             height: 8,
                           ),
-                          appFunctions()
-                              .inputField(label: 'Name '),
-                          appFunctions().inputField(label: 'Email'),
+                          editableField(label: 'Name',ctrl: _nameOnLicence),
+                          //editableField(label: 'Email',ctrl: userEmailID),
                         ],
                       ),
                       const SizedBox(
@@ -161,7 +251,7 @@ class _editProfileState extends State<editProfile> {
                               ),
                             ),
                           ),
-                          appFunctions().inputField(label: 'State'),
+                          editableField(label: 'State',ctrl: _licenceNumber),
                           appFunctions().inputField(label: 'District'),
                           appFunctions().inputField(label: 'Locality'),
                         ],
@@ -224,10 +314,12 @@ class _editProfileState extends State<editProfile> {
         ),
       );
     }
-
-
+    
     //editprof
 
+
+
+    
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -238,14 +330,14 @@ class _editProfileState extends State<editProfile> {
           },
           icon: const Icon(Icons.arrow_back_ios_new),
           iconSize: 24,
-          color: Colors.black,
+          color: Colors.white,
         ),
         title: const Text(
           "Edit Profile",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),
@@ -260,9 +352,12 @@ class _editProfileState extends State<editProfile> {
 
             if (snapshot.hasData) {
               var output = snapshot.data!.data();
-              driverName = output!['name'].toString();
-              driverName = output!['email'].toString();
-              driverName = output!['phone'].toString();
+              _nameOnLicence = TextEditingController(text: output!['name']);
+              _licenceNumber = TextEditingController(text: output['phone']);
+              _district = TextEditingController(text: output['phone']);
+              _state = TextEditingController(text: output['phone']);
+              _vehicleModel = TextEditingController(text: output['phone']);
+              _locality= TextEditingController(text: output['Locality']);
               return showProfile();
             }
 
