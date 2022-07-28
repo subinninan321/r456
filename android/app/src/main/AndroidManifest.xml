@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
 
    <application
@@ -37,6 +39,6 @@
             android:name="flutterEmbedding"
             android:value="2"/>
        <meta-data android:name="com.google.android.geo.API_KEY"
-                  android:value="AIzaSyB54f3rqsVoPl0A4e3wv_Bx9S5_2omcep4"/>
+                  android:value="AIzaSyBi8zK1Zi-GkK6D7uxHjfFgSz79ICbM2g4"/>
     </application>
 </manifest>
