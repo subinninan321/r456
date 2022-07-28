@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:r456/appFunctions.dart';
+import 'package:r456/dashboard.dart';
+
+import 'databaseoperations.dart';
 
 class RegCon extends StatefulWidget {
   const RegCon({Key? key}) : super(key: key);
@@ -9,6 +14,37 @@ class RegCon extends StatefulWidget {
 }
 
 class _RegConState extends State<RegCon> {
+
+
+  addUserProfile() async{
+    userEmailID=FirebaseAuth.instance.currentUser!.email.toString();
+    final docDriver = FirebaseFirestore.instance.collection('driverdetails').doc(userEmailID).collection('Profile Details').doc();
+
+    final driver = DriverProfile(
+        nameOnLicence: _nameOnLicence.text,
+        licenceNumber: _licenceNumber.text,
+        district: _district.text,
+        locality: _locality.text,
+        state: _state.text,
+        vehicleNumber: _vehicleNumber.text,
+        vehicleModel: _vehicleModel.text,
+
+    );
+
+    final json= driver.toJson();
+    await docDriver.set(json);
+  }
+
+  final TextEditingController _nameOnLicence = TextEditingController();
+  final TextEditingController _licenceNumber = TextEditingController();
+  final TextEditingController _vehicleNumber = TextEditingController();
+  final TextEditingController _state = TextEditingController();
+  final TextEditingController _district = TextEditingController();
+  final TextEditingController _locality = TextEditingController();
+  final TextEditingController _vehicleModel = TextEditingController();
+  final TextEditingController _ = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +63,7 @@ class _RegConState extends State<RegCon> {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),
@@ -71,8 +107,8 @@ class _RegConState extends State<RegCon> {
                           height: 8,
                         ),
                         appFunctions()
-                            .inputField(label: 'Name On Driving Licence'),
-                        appFunctions().inputField(label: 'Licence No'),
+                            .inputField(label: 'Name On Driving Licence',ctrl: _nameOnLicence),
+                        appFunctions().inputField(label: 'Licence No',ctrl: _licenceNumber),
                         appFunctions().inputField(label: 'Valid Till'),
                       ],
                     ),
@@ -92,9 +128,9 @@ class _RegConState extends State<RegCon> {
                             ),
                           ),
                         ),
-                        appFunctions().inputField(label: 'State'),
-                        appFunctions().inputField(label: 'District'),
-                        appFunctions().inputField(label: 'Locality'),
+                        appFunctions().inputField(label: 'State',ctrl: _state),
+                        appFunctions().inputField(label: 'District',ctrl: _district),
+                        appFunctions().inputField(label: 'Locality',ctrl: _locality),
                       ],
                     ),
                     const SizedBox(
@@ -112,8 +148,8 @@ class _RegConState extends State<RegCon> {
                             ),
                           ),
                         ),
-                        appFunctions().inputField(label: 'Vehicle Number'),
-                        appFunctions().inputField(label: 'Vehicle Model'),
+                        appFunctions().inputField(label: 'Vehicle Number',ctrl: _vehicleNumber),
+                        appFunctions().inputField(label: 'Vehicle Model',ctrl: _vehicleModel),
                         appFunctions().inputField(label: 'Valid Till'),
                       ],
                     ),
@@ -129,10 +165,20 @@ class _RegConState extends State<RegCon> {
                     minWidth: double.infinity,
                     height: 60,
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegCon()));
+                      try {
+
+                        //enter data
+                        addUserProfile();
+                        //enter data
+
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const dashboard()));
+                      } catch (e) {
+                        print(e);
+                      }
                     },
                     shape: RoundedRectangleBorder(
                       side: const BorderSide(
@@ -156,4 +202,48 @@ class _RegConState extends State<RegCon> {
       ),
     );
   }
+}
+
+class DriverProfile {
+  String nameOnLicence;
+  String licenceNumber;
+  String vehicleNumber;
+  String state;
+  String district;
+  String locality;
+  String vehicleModel;
+
+
+  DriverProfile({
+    required this.nameOnLicence,
+    required this.licenceNumber,
+    required this.district,
+    required this.locality,
+    required this.state,
+    required this.vehicleNumber,
+    required this.vehicleModel,
+  });
+
+
+  DriverProfile.fromJson(Map<String, dynamic> json)
+      : this(
+    nameOnLicence: json['name']! as String,
+    licenceNumber: json['phone']! as String,
+    locality:json['email']! as String ,
+    district: json['id']! as String,
+    state: json['id']! as String,
+    vehicleNumber: json['id']! as String,
+    vehicleModel: json['id']! as String,
+  );
+
+  Map<String, dynamic> toJson()=>{
+    'Name on License' : nameOnLicence,
+    'License Number': licenceNumber,
+    'Locality': locality,
+    'District': district,
+    'State': state,
+    'Vehicle Number': vehicleNumber,
+    'Vehicle Model' : vehicleModel,
+  };
+
 }

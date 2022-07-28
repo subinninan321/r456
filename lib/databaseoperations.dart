@@ -157,7 +157,7 @@ class Authentication {
       firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password).then((value) {
         if (value.user != null) {
-          print("swrrt");
+          userEmailID=FirebaseAuth.instance.currentUser!.email.toString();
         }
       },);
     } on FirebaseAuthException catch (e) {

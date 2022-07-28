@@ -27,9 +27,23 @@ class _dashboardState extends State<dashboard> {
   @override
   void initState(){
     userEmailID=FirebaseAuth.instance.currentUser!.email.toString();
+    getCurrentUserData();
     getCurrentLocation();
     super.initState();
   }
+
+  //firebase
+
+  getCurrentUserData() async{
+    var doc = FirebaseFirestore.instance.collection('driverdetails').doc(userEmailID).get().then((value) {
+
+    currentUserName=value.get('name').toString();
+    });
+  }
+
+  String currentUserName="name";
+
+  //firebase
 
   bool value = false;
   int flag = 0;
@@ -544,10 +558,10 @@ class _dashboardState extends State<dashboard> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text("Welcome{Driver().passData()}",
+                      const Text("Welcome back",
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 22,
+                        style:TextStyle(
+                          fontSize:18,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -555,10 +569,10 @@ class _dashboardState extends State<dashboard> {
                       const SizedBox(height: 5,),
 
                       const SizedBox(height: 5,),
-                      const Text("Vehicle Number : ",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 16,
+                       Text(currentUserName,
+                      textAlign: TextAlign.center,
+                      style:const TextStyle(
+                        fontSize: 22,
                         fontWeight: FontWeight.w600,
                         color: Colors.black,
                       ),

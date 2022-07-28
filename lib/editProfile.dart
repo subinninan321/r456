@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:r456/databaseoperations.dart';
 import 'dart:io';
 import 'additionalfiles/popupbox.dart';
 import 'RegCon.dart';
@@ -18,6 +20,9 @@ class editProfile extends StatefulWidget {
 }
 
 class _editProfileState extends State<editProfile> {
+
+
+
 
   Widget buildImage(){
     const img=AssetImage('assets/img1.jpg');
@@ -50,10 +55,10 @@ class _editProfileState extends State<editProfile> {
   }
 
   Widget buildShapeCircle({
-  required Widget child,
+    required Widget child,
     required double all,
     required Color color,
-})=>
+  }) =>
       ClipOval(
         child: Container(
           padding: EdgeInsets.all(all),
@@ -62,10 +67,168 @@ class _editProfileState extends State<editProfile> {
         ),
       );
 
+
+
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
+
+    //editprof
+
+    String driverName='';
+    String driverEmail='';
+    String driverPhone='';
+
+    Widget showProfile(){
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        width: double.infinity,
+        // constraints: const BoxConstraints.expand(),
+        // decoration: const BoxDecoration(
+        //     image: DecorationImage(
+        //         image: AssetImage("assets/img1.jpg"), fit: BoxFit.fill)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              height: 40,
+            ),
+            Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Column(
+                        children: [
+                          Center(
+                              child: Stack(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 50,
+                                    backgroundColor: Colors.white,
+                                    child: ClipOval(
+
+                                      child: buildImage(),
+
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 4,
+                                    child: GestureDetector (
+                                      //onTap: const PopUpBox().showEditBox(context),
+                                      child: editIcon(),
+                                    ),
+                                  )
+                                ],
+                              )
+                          ),
+                          const SizedBox(height: 25),
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Personal Details',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          appFunctions()
+                              .inputField(label: 'Name '),
+                          appFunctions().inputField(label: 'Email'),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Region Information',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          appFunctions().inputField(label: 'State'),
+                          appFunctions().inputField(label: 'District'),
+                          appFunctions().inputField(label: 'Locality'),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Vehicle Information',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          appFunctions().inputField(label: 'Vehicle Number'),
+                          appFunctions().inputField(label: 'Vehicle Model'),
+                          appFunctions().inputField(label: 'Valid Till'),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                    ],
+                  ),
+                )),
+            Column(
+              children: <Widget>[
+                MaterialButton(
+                  minWidth: double.infinity,
+                  height: 60,
+                  onPressed: () {
+                    appFunctions().driverStatus("Profile Updated");
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const dashboard()));
+                  },
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(
+                      color: Colors.black,
+                    ),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: const Text(
+                    "Update",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+
+    //editprof
+
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -87,147 +250,25 @@ class _editProfileState extends State<editProfile> {
         ),
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-          width: double.infinity,
-          // constraints: const BoxConstraints.expand(),
-          // decoration: const BoxDecoration(
-          //     image: DecorationImage(
-          //         image: AssetImage("assets/img1.jpg"), fit: BoxFit.fill)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 40,
-              ),
-              Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        Column(
-                          children: [
-                            Center(
-                              child: Stack(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 50,
-                                    backgroundColor: Colors.white,
-                                    child: ClipOval(
+        child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance
+            .collection('driverdetails')
+            .doc(userEmailID)
+            .snapshots(),
+        builder: (context, snapshot) {
+            if (snapshot.hasError) return Text('Error = ${snapshot.error}');
 
-                                        child: buildImage(),
+            if (snapshot.hasData) {
+              var output = snapshot.data!.data();
+              driverName = output!['name'].toString();
+              driverName = output!['email'].toString();
+              driverName = output!['phone'].toString();
+              return showProfile();
+            }
 
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                      right: 4,
-                                    child: GestureDetector (
-                                        //onTap: const PopUpBox().showEditBox(context),
-                                        child: editIcon(),
-                                   ),
-                                  )
-                                ],
-                              )
-                            ),
-                          const SizedBox(height: 25),
-                          const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Personal Details',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                              height: 8,
-                            ),
-                            appFunctions()
-                                .inputField(label: 'Name '),
-                            appFunctions().inputField(label: 'Email'),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Column(
-                          children: [
-                            const Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Region Information',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                            appFunctions().inputField(label: 'State'),
-                            appFunctions().inputField(label: 'District'),
-                            appFunctions().inputField(label: 'Locality'),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),Column(
-                          children: [
-                            const Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Vehicle Information',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                            appFunctions().inputField(label: 'Vehicle Number'),
-                            appFunctions().inputField(label: 'Vehicle Model'),
-                            appFunctions().inputField(label: 'Valid Till'),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                      ],
-                    ),
-                  )),
-              Column(
-                children: <Widget>[
-                  MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {
-                      appFunctions().driverStatus("Profile Updated");
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const dashboard()));
-                    },
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const Text(
-                      "Update",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+            return const Center(child: CircularProgressIndicator());
+          },
+        )
       ),
     );
   }

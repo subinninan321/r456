@@ -94,13 +94,16 @@ class _DriverRegCon extends State<DriverRegCon>
                     onPressed: () {
                       final isValidForm = formKey.currentState!.validate();
                       if(passMatch && isValidForm){
-
+                        try{
                         context.read<Authentication>().signUp(
                             email: _email.text.trim(),
                             password: _pass1.text.trim(),
                             name: _name.text.trim(),
                             phone: _phone.text.trim());
-                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const dashboard()));
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const RegCon()));}
+                            catch(e){
+                          print(e);
+                            }
                       } else {
                         appFunctions().driverStatus("Check your password");
                       }
