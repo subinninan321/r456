@@ -322,7 +322,7 @@ class _editProfileState extends State<editProfile> {
     
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {

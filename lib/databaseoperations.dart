@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:r456/RegCon.dart';
 import 'package:r456/additionalfiles/CheckLoginForUser.dart';
 import 'package:r456/appFunctions.dart';
+
+import 'firebase_options.dart';
 String userEmailID="";
 String userName="";
 String userPhone="";
@@ -66,6 +68,22 @@ class _DatabaseOperationsState extends State<DatabaseOperations> {
     );
   }
 
+
+  //new
+
+  // void showRideRequestBox(BuildContext context){
+  //   var alert = AlertDialog(
+  //     title: Text("test"),
+  //     content: Text(notification.body.toString()),
+  //
+  //   );
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return alert;
+  //       });
+  // }
+  //new
 
 
 

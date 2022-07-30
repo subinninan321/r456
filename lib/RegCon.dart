@@ -18,7 +18,7 @@ class _RegConState extends State<RegCon> {
 
   addUserProfile() async{
     userEmailID=FirebaseAuth.instance.currentUser!.email.toString();
-    final docDriver = FirebaseFirestore.instance.collection('driverdetails').doc(userEmailID).collection('Profile Details').doc();
+    final docDriver = FirebaseFirestore.instance.collection('driverdetails').doc(userEmailID);//.collection('Profile Details').doc();
 
     final driver = DriverProfile(
         nameOnLicence: _nameOnLicence.text,
@@ -32,7 +32,7 @@ class _RegConState extends State<RegCon> {
     );
 
     final json= driver.toJson();
-    await docDriver.set(json);
+    await docDriver.set(json,SetOptions(merge: true));
   }
 
   final TextEditingController _nameOnLicence = TextEditingController();
@@ -43,6 +43,7 @@ class _RegConState extends State<RegCon> {
   final TextEditingController _locality = TextEditingController();
   final TextEditingController _vehicleModel = TextEditingController();
   final TextEditingController _ = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
 
   @override
@@ -75,128 +76,128 @@ class _RegConState extends State<RegCon> {
           // decoration: const BoxDecoration(
           //     image: DecorationImage(
           //         image: AssetImage("assets/img1.jpg"), fit: BoxFit.fill)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                height: 40,
-              ),
-              const SizedBox(
-                height: 4,
-              ),
-              Expanded(
-                  child: SingleChildScrollView(
-                child: Column(
+          child: Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            key: formKey,
+            child: ListView(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
 
+                    children: <Widget>[
+                      Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Driving Licence',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          appFunctions()
+                              .inputField(label: 'Name On Driving Licence',ctrl: _nameOnLicence),
+                          appFunctions().inputField(label: 'Licence No',ctrl: _licenceNumber),
+                          appFunctions().inputField(label: 'Valid Till'),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Region Information',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          appFunctions().inputField(label: 'State',ctrl: _state),
+                          appFunctions().inputField(label: 'District',ctrl: _district),
+                          appFunctions().inputField(label: 'Locality',ctrl: _locality),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Vehicle Information',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          appFunctions().inputField(label: 'Vehicle Number',ctrl: _vehicleNumber),
+                          appFunctions().inputField(label: 'Vehicle Model',ctrl: _vehicleModel),
+                          appFunctions().inputField(label: 'Valid Till'),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
                   children: <Widget>[
-                    Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Driving Licence',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
+                    MaterialButton(
+                      minWidth: double.infinity,
+                      height: 60,
+                      onPressed: () {
+                        final isValidForm = formKey.currentState!.validate();
+                        if(isValidForm) {
+                          try {
+                            //enter data
+                            addUserProfile();
+                            //enter data
 
-                        const SizedBox(
-                          height: 8,
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const dashboard()));
+                          } catch (e) {
+                            print(e);
+                          }
+                        }else{
+                          appFunctions().driverStatus("Check your Data");
+                        }
+                      },
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(
+                          color: Colors.black,
                         ),
-                        appFunctions()
-                            .inputField(label: 'Name On Driving Licence',ctrl: _nameOnLicence),
-                        appFunctions().inputField(label: 'Licence No',ctrl: _licenceNumber),
-                        appFunctions().inputField(label: 'Valid Till'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Region Information',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                              fontSize: 20,
-                            ),
-                          ),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: const Text(
+                        "Save",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
                         ),
-                        appFunctions().inputField(label: 'State',ctrl: _state),
-                        appFunctions().inputField(label: 'District',ctrl: _district),
-                        appFunctions().inputField(label: 'Locality',ctrl: _locality),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Vehicle Information',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        appFunctions().inputField(label: 'Vehicle Number',ctrl: _vehicleNumber),
-                        appFunctions().inputField(label: 'Vehicle Model',ctrl: _vehicleModel),
-                        appFunctions().inputField(label: 'Valid Till'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 8,
+                      ),
                     ),
                   ],
                 ),
-              )),
-              Column(
-                children: <Widget>[
-                  MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {
-                      try {
-
-                        //enter data
-                        addUserProfile();
-                        //enter data
-
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const dashboard()));
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

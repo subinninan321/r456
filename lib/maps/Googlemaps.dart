@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,6 +11,8 @@ import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:r456/appFunctions.dart';
+import 'package:r456/main.dart';
+import 'package:r456/maps/pushnotificationservice.dart';
 import '../databaseoperations.dart';
 
 class MapsExtension extends StatefulWidget {
@@ -191,7 +195,42 @@ class _MapsExtensionState extends State<MapsExtension> {
             // ),
           },
         ),
-        FloatingActionButton(onPressed: ()=> appFunctions().driverStatus("distance $distanceFromDriver")),
+        FloatingActionButton(
+            onPressed:  () {
+                flutterLocalNotificationsPlugin.show(
+                  0,
+                  "testing$distanceFromDriver",
+                  "aghjklf",
+                  NotificationDetails(
+                    android: AndroidNotificationDetails(
+                      channel.id,
+                      channel.name,
+                      playSound: true,
+                      priority: Priority.high,
+                      color: Colors.blueAccent,
+                      icon: "@mipmap/ic_launcher",
+                      channelDescription: channel.description,
+
+                    )
+                  ),
+                );
+
+
+              // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+              // FlutterLocalNotificationsPlugin();
+              // var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+              //     '1687497218170948721x8',
+              //     'New Trips Notification ',
+              //     channelDescription: 'Notification Channel for vendor. All the new trips notifications will arrive here.',
+              //     // style: AndroidNotificationStyle.BigText,
+              //     //styleInformation: bigTextStyleInformation);
+              // );
+              // var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+              //
+              // flutterLocalNotificationsPlugin.show(5, 'Let\'s Get Wride!',
+              //   'You Have Got A New Trip!', platformChannelSpecifics,);
+                PushNotification().getToken();
+              appFunctions().driverStatus("distance $distanceFromDriver");}),
       ]),
     );
   }

@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -23,6 +25,9 @@ class dashboard extends StatefulWidget {
 }
 
 class _dashboardState extends State<dashboard> {
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer =
+  FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   void initState(){
@@ -30,7 +35,32 @@ class _dashboardState extends State<dashboard> {
     getCurrentUserData();
     getCurrentLocation();
     super.initState();
-  }
+
+
+
+    //
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async{
+      print("afsf\n \n\n\n\n\n\n\n\n\n\n\n\n");
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      print(notification?.title.toString());
+      if (notification != null && android != null) {
+        showDialog(context: context, builder: (_) {
+          return AlertDialog(
+            title: Text(notification.title.toString()),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(notification.body.toString()),
+                ],
+              ),
+            ),
+          );
+        });
+      }
+    });
+        }
 
   //firebase
 
@@ -58,10 +88,7 @@ class _dashboardState extends State<dashboard> {
   LocationData? currentLocation;
   StreamSubscription<LocationData>? locationChange;
 
-
   //liveloc up
-
-
 
   final appBar = AppBar(
     title: const Text("Dashboard",
@@ -77,8 +104,6 @@ class _dashboardState extends State<dashboard> {
 
   static const LatLng source = LatLng(9.6723510, 76.3897231);
   static const LatLng destination = LatLng(9.6699072, 76.3883354);
-
-
 
   void getCurrentLocation() async{
     Location location = Location();
@@ -145,7 +170,6 @@ class _dashboardState extends State<dashboard> {
     });
   }
 
-
   Widget statusSwitch()=>Transform.scale(
     scale: 1.5,
     child:Switch.adaptive(
@@ -174,8 +198,6 @@ class _dashboardState extends State<dashboard> {
       }),
     ),
   );
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -671,13 +693,13 @@ class _dashboardState extends State<dashboard> {
                   child:Column(
                     children: [
                       Visibility(
-                          visible: rideRequestStatus,
+                          visible: driverOnlineStatus,
                           child: acceptRide()),
                       Visibility(
                           visible: rideStatus,
                           child: offlineStatus()),
                       Visibility(
-                          visible: driverOnlineStatus,
+                          visible: rideRequestStatus,
                           child: onlineStatus()),
                       Visibility(
                           visible: userPickupStatus,

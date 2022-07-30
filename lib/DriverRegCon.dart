@@ -34,8 +34,6 @@ class _DriverRegCon extends State<DriverRegCon>
   @override
   Widget build(BuildContext context) {
 
-
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
 
@@ -75,7 +73,6 @@ class _DriverRegCon extends State<DriverRegCon>
                     appFunctions().inputField(label: 'Phone No',ctrl: _phone,keyType: TextInputType.phone),
                     appFunctions().inputField(label: 'Email id',ctrl: _email,keyType: TextInputType.emailAddress),
                     inputFieldPassword(label: 'Password',ctrl: _pass1),
-
                     inputFieldPassword(label: 'Re Enter Password',ctrl: _pass2,reenter: true),
 
                   ],
